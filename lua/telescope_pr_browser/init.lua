@@ -1,6 +1,7 @@
 local conf = require('telescope.config').values
 local pickers = require 'telescope.pickers'
 local actions = require 'telescope.actions'
+local action_state = require 'telescope.actions.state'
 local finders = require 'telescope.finders'
 local previewers = require 'telescope.previewers'
 local utils = require 'telescope.previewers.utils'
@@ -22,7 +23,7 @@ local M = {}
 M._make_gh_command = function(args)
   local job_opts = {
     command = 'gh',
-    args = vim.tbl_flatten { args, '--json', 'number,title', '--jq', '.[]' },
+    args = vim.tbl_flatten { args, '--json', 'number,title,url,body,author', '--jq', '.[]' },
   }
   log.info('Running job', job_opts)
   local job = plenary.job:new(job_opts):sync()
@@ -58,7 +59,8 @@ M.list_prs = function(opts)
         title = 'PR Details',
         define_preview = function(self, entry)
           local formatted = {
-            '# Title: ' .. entry.value.title,
+            '# ' .. entry.value.number .. ': ' .. entry.value.title,
+            '@' .. entry.value.author.login .. ' (' .. entry.value.author.name .. ')',
           }
           vim.api.nvim_buf_set_lines(self.state.bufnr, 0, 0, true, formatted)
           utils.highlighter(self.state.bufnr, 'markdown')
@@ -67,7 +69,10 @@ M.list_prs = function(opts)
 
       attach_mappings = function(prompt_bufnr)
         actions.select_default:replace(function()
+          local selection = action_state.get_selected_entry()
+          log.info('Got selection', selection)
           actions.close(prompt_bufnr)
+          vim.fn.system('open ' .. selection.value.url)
         end)
         return true
       end,

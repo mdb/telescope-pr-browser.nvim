@@ -23,7 +23,7 @@ local M = {}
 M._make_gh_command = function(args)
   local job_opts = {
     command = 'gh',
-    args = vim.tbl_flatten { args, '--json', 'number,title,url,body,author', '--jq', '.[]' },
+    args = vim.tbl_flatten { args, '--json', 'number,title,url,body,author,mergeable', '--jq', '.[]' },
   }
   log.info('Running job', job_opts)
   local job = plenary.job:new(job_opts):sync()
@@ -58,10 +58,23 @@ M.list_prs = function(opts)
       previewer = previewers.new_buffer_previewer {
         title = 'PR Details',
         define_preview = function(self, entry)
+          local mergeable = '✖ '
+          if entry.value.mergeable == 'MERGEABLE' then
+            mergeable = '✔ '
+          end
+          local name = ''
+          if entry.value.author.name ~= '' then
+            name = ' - ' .. entry.value.author.name
+          end
           local formatted = {
-            '# ' .. entry.value.number .. ': ' .. entry.value.title,
-            '@' .. entry.value.author.login .. ' (' .. entry.value.author.name .. ')',
+            '# ' .. mergeable .. entry.value.number .. ': ' .. entry.value.title,
+            '@' .. entry.value.author.login .. name,
+            '',
           }
+          for _, line in ipairs(vim.split(entry.value.body, '\r\n')) do
+            local sanitized = line:gsub('[\n\r]', '')
+            table.insert(formatted, sanitized)
+          end
           vim.api.nvim_buf_set_lines(self.state.bufnr, 0, 0, true, formatted)
           utils.highlighter(self.state.bufnr, 'markdown')
         end,

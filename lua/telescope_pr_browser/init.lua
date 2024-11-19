@@ -10,6 +10,7 @@ local log = require('plenary.log').new {
   plugin = 'telescope_pr_browser',
   level = 'info',
 }
+local prb_utils = require 'telescope_pr_browser.utils'
 
 ---@class TPRBModule
 ---@field config TPRBConfig
@@ -23,7 +24,7 @@ local M = {}
 M._make_gh_command = function(args)
   local job_opts = {
     command = 'gh',
-    args = vim.tbl_flatten { args, '--json', 'number,title,url,body,author,mergeable', '--jq', '.[]' },
+    args = vim.tbl_flatten { args, '--json', 'number,title,url,body,author,mergeable,files', '--jq', '.[]' },
   }
   log.info('Running job', job_opts)
   local job = plenary.job:new(job_opts):sync()
@@ -75,6 +76,12 @@ M.list_prs = function(opts)
             local sanitized = line:gsub('[\n\r]', '')
             table.insert(formatted, sanitized)
           end
+          table.insert(formatted, '')
+          table.insert(formatted, '## Changed files')
+          table.insert(formatted, '')
+          for _, file in ipairs(entry.value.files) do
+            table.insert(formatted, '* ' .. file.path)
+          end
           vim.api.nvim_buf_set_lines(self.state.bufnr, 0, 0, true, formatted)
           utils.highlighter(self.state.bufnr, 'markdown')
         end,
@@ -85,7 +92,7 @@ M.list_prs = function(opts)
           local selection = action_state.get_selected_entry()
           log.info('Got selection', selection)
           actions.close(prompt_bufnr)
-          vim.fn.system('open ' .. selection.value.url)
+          prb_utils.open_url(selection.value.url)
         end)
         return true
       end,

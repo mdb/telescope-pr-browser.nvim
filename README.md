@@ -1,3 +1,5 @@
+[![CI/CD](https://github.com/mdb/telescope-pr-browser.nvim/actions/workflows/cicd.yaml/badge.svg)](https://github.com/mdb/telescope-pr-browser.nvim/actions/workflows/cicd.yaml)
+
 # telescope-pr-browser.nvim
 
 A Neovim plugin for browsing GitHub PRs using [telescope](https://github.com/nvim-telescope/telescope.nvim).

@@ -45,9 +45,13 @@ M.list_prs = function(opts)
           local process = vim.json.decode(entry)
           log.info('Got entry', process)
           if process then
+            local mergeable = '  '
+            if process.mergeable == 'MERGEABLE' then
+              mergeable = '✔ '
+            end
             return {
               value = process,
-              display = process.title,
+              display = mergeable .. process.title,
               ordinal = process.number .. ' ' .. process.title,
             }
           end
@@ -59,17 +63,14 @@ M.list_prs = function(opts)
       previewer = previewers.new_buffer_previewer {
         title = 'PR Details',
         define_preview = function(self, entry)
-          local mergeable = '✖ '
-          if entry.value.mergeable == 'MERGEABLE' then
-            mergeable = '✔ '
-          end
-          local name = ''
+          local name = entry.value.author.login
           if entry.value.author.name ~= '' then
-            name = ' - ' .. entry.value.author.name
+            name = entry.value.author.name
           end
           local formatted = {
-            '# ' .. mergeable .. entry.value.number .. ': ' .. entry.value.title,
-            '@' .. entry.value.author.login .. name,
+            '# ' .. entry.value.number .. ': ' .. entry.value.title,
+            '',
+            '[' .. name .. '](https://github.com/' .. entry.value.author.login .. ')',
             '',
           }
           for _, line in ipairs(vim.split(entry.value.body, '\r\n')) do
@@ -90,7 +91,7 @@ M.list_prs = function(opts)
       attach_mappings = function(prompt_bufnr)
         actions.select_default:replace(function()
           local selection = action_state.get_selected_entry()
-          log.info('Got selection', selection)
+          log.info('Got selection', selection.value.title)
           actions.close(prompt_bufnr)
           prb_utils.open_url(selection.value.url)
         end)

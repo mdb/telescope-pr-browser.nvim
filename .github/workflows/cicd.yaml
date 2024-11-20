@@ -16,7 +16,7 @@ jobs:
         nvim_version: [nightly, v0.10.0]
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v4
 
       - uses: rhysd/action-setup-vim@v1
         with:

@@ -1,6 +1,6 @@
 # Run all test files
 test: lua/plenary.nvim lua/telescope.nvim
-	nvim \
+	@nvim \
 		--headless \
 		--noplugin \
 		-u scripts/minimal_init.vim \

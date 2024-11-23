@@ -29,3 +29,10 @@ return {
   },
 }
 ```
+
+## Development
+
+Development dependencies:
+
+* luarocks
+* luacheck

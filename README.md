@@ -4,14 +4,15 @@
 
 A Neovim plugin for browsing GitHub PRs using [telescope](https://github.com/nvim-telescope/telescope.nvim).
 
-`telescope-pr-browser.nvim` provides a `:Telescope telescope_pr_browser list`
+* `telescope-pr-browser.nvim` provides a `:Telescope telescope_pr_browser list`
 command for browsing the current git repository's open PRs using [telescope](https://github.com/nvim-telescope/telescope.nvim).
+* `Enter` on the selected PR to open the PR in your default web browser.
 
 ## Installation
 
 `telescope-pr-browser.nvim` requires the [gh](https://cli.github.com/) CLI.
 
-Installation example using [lazy.nvim](https://github.com/folke/lazy.nvim):
+Example installation configuration using [lazy.nvim](https://github.com/folke/lazy.nvim):
 
 ```lua
 return {

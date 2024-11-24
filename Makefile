@@ -1,10 +1,13 @@
 # Run all test files
-test: lua/plenary.nvim lua/telescope.nvim
+test: lua/plenary.nvim lua/telescope.nvim luacheck
 	@nvim \
 		--headless \
 		--noplugin \
 		-u scripts/minimal_init.vim \
 		-c "PlenaryBustedDirectory lua/tests { minimal_init = './scripts/minimal_init.vim' }"
+
+luacheck:
+	luacheck lua scripts
 
 lua/plenary.nvim:
 	git clone \

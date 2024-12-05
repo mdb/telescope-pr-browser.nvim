@@ -5,6 +5,13 @@ test: lua/plenary.nvim lua/telescope.nvim
 		--noplugin \
 		-u scripts/minimal_init.vim \
 		-c "PlenaryBustedDirectory lua/tests { minimal_init = './scripts/minimal_init.vim' }"
+.PHONY: test
+
+static-analysis: luacheck
+.PHONY: static-analysis
+
+luacheck:
+	luacheck lua scripts
 
 lua/plenary.nvim:
 	git clone \

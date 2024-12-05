@@ -7,6 +7,21 @@ on:
       - main
 
 jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install luarocks and luacheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y luarocks
+          sudo luarocks install luacheck
+
+      - name: Static analysis
+        run: make static-analysis
+
   test:
     runs-on: ${{ matrix.os }}
 

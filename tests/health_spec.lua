@@ -1,10 +1,17 @@
 local health = require 'telescope_pr_browser.health'
 
-describe('utils', function()
+describe('health', function()
   describe('check', function()
-    it('returns true when the gh CLI is installed', function()
-      local result = health.check()
-      assert.are.same(true, result)
+    describe('when the gh CLI is installed', function()
+      local result
+
+      before_each(function()
+        result = health.check()
+      end)
+
+      it('returns true', function()
+        assert.are.same(true, result)
+      end)
     end)
   end)
 end)

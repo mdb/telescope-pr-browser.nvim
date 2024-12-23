@@ -17,12 +17,21 @@ describe('health', function()
       mock.revert(vim_health)
     end)
 
+    it('checks that the gh CLI is installed', function()
+      local _ = health.check()
+      assert.stub(fn.executable).was_called_with 'gh'
+    end)
+
     describe('when the gh CLI is installed', function()
       local result
 
       before_each(function()
         fn.executable.returns(1)
         result = health.check()
+      end)
+
+      it('calls health.ok with an appropriate message', function()
+        assert.stub(vim_health.ok).was_called_with 'gh CLI installed.'
       end)
 
       it('returns true', function()
@@ -36,6 +45,10 @@ describe('health', function()
       before_each(function()
         fn.executable.returns(0)
         result = health.check()
+      end)
+
+      it('calls health.error with an appropriate message', function()
+        assert.stub(vim_health.error).was_called_with 'gh CLI not found.'
       end)
 
       it('returns false', function()

@@ -11,7 +11,7 @@ static-analysis: luacheck
 .PHONY: static-analysis
 
 luacheck:
-	luacheck lua scripts
+	luacheck lua tests
 
 lua/plenary.nvim:
 	git clone \

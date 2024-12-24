@@ -1,7 +1,13 @@
-local eq = assert.are.same
+local mock = require 'luassert.mock'
 
 describe('telescope-pr-browser', function()
-  it('evaluates 5 as 5', function()
-    eq(5, 5)
+  local tprb = require 'telescope_pr_browser'
+
+  describe('setup', function()
+    it('sets the config to the specified table', function()
+      local config = { foo = 'bar' }
+      tprb.setup(config)
+      assert.are.same(tprb.config, config)
+    end)
   end)
 end)

@@ -1,15 +1,17 @@
 [![CI/CD](https://github.com/mdb/telescope-pr-browser.nvim/actions/workflows/cicd.yaml/badge.svg)](https://github.com/mdb/telescope-pr-browser.nvim/actions/workflows/cicd.yaml)
 
 > [!CAUTION]
-> Early in development
+> Early development
 
 # telescope-pr-browser.nvim
 
-A Neovim plugin for browsing GitHub PRs using [telescope](https://github.com/nvim-telescope/telescope.nvim).
+A Neovim plugin for browsing GitHub pull requests using [telescope](https://github.com/nvim-telescope/telescope.nvim).
 
 * `telescope-pr-browser.nvim` provides a `:Telescope telescope_pr_browser list`
 command for browsing the current git repository's open PRs using [telescope](https://github.com/nvim-telescope/telescope.nvim).
 * `Enter` on the selected PR to open the PR in your default web browser.
+
+![demo](./demo.gif)
 
 ## Installation
 
@@ -37,5 +39,10 @@ return {
 
 Development dependencies:
 
-* luarocks
 * luacheck
+
+Run tests:
+
+```
+make
+```

@@ -22,3 +22,7 @@ lua/telescope.nvim:
 	git clone \
 		--filter=blob:none \
 		https://github.com/nvim-telescope/telescope.nvim $@
+
+demo:
+	vhs < demo.tape
+.PHONY: demo

@@ -3,7 +3,7 @@ local utils = require 'telescope.previewers.utils'
 local M = {}
 
 -- Define Telescope previewer.
-function M.define(self, entry)
+function M.define(bufnr, entry)
   local name = entry.value.author.login
   if entry.value.author.name ~= '' then
     name = entry.value.author.name
@@ -24,8 +24,8 @@ function M.define(self, entry)
   for _, file in ipairs(entry.value.files) do
     table.insert(formatted, '* ' .. file.path)
   end
-  vim.api.nvim_buf_set_lines(self.state.bufnr, 0, 0, true, formatted)
-  utils.highlighter(self.state.bufnr, 'markdown')
+  vim.api.nvim_buf_set_lines(bufnr, 0, 0, true, formatted)
+  utils.highlighter(bufnr, 'markdown')
 end
 
 return M

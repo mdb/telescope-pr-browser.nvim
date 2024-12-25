@@ -4,7 +4,6 @@ local actions = require 'telescope.actions'
 local action_state = require 'telescope.actions.state'
 local finders = require 'telescope.finders'
 local previewers = require 'telescope.previewers'
-local utils = require 'telescope.previewers.utils'
 local plenary = require 'plenary'
 local log = require('plenary.log').new {
   plugin = 'telescope_pr_browser',
@@ -52,7 +51,7 @@ M.list_prs = function(opts)
       previewer = previewers.new_buffer_previewer {
         title = 'PR Details',
         define_preview = function(self, entry)
-          return preview_definer.define(self, entry)
+          return preview_definer.define(self.state.bufnr, entry)
         end,
       },
 

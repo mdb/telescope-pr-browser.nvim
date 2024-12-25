@@ -4,13 +4,14 @@ local actions = require 'telescope.actions'
 local action_state = require 'telescope.actions.state'
 local finders = require 'telescope.finders'
 local previewers = require 'telescope.previewers'
-local utils = require 'telescope.previewers.utils'
 local plenary = require 'plenary'
 local log = require('plenary.log').new {
   plugin = 'telescope_pr_browser',
   level = 'info',
 }
 local prb_utils = require 'telescope_pr_browser.utils'
+local entry_maker = require 'telescope_pr_browser.entry_maker'
+local preview_definer = require 'telescope_pr_browser.preview_definer'
 
 ---@class TPRBModule
 ---@field config TPRBConfig
@@ -41,20 +42,7 @@ M.list_prs = function(opts)
         end,
 
         entry_maker = function(entry)
-          log.info('Got entry', entry)
-          local process = vim.json.decode(entry)
-          log.info('Got entry', process)
-          if process then
-            local mergeable = '  '
-            if process.mergeable == 'MERGEABLE' then
-              mergeable = '✔ '
-            end
-            return {
-              value = process,
-              display = mergeable .. process.title,
-              ordinal = process.number .. ' ' .. process.title,
-            }
-          end
+          return entry_maker.make(entry, log)
         end,
       },
 
@@ -63,28 +51,7 @@ M.list_prs = function(opts)
       previewer = previewers.new_buffer_previewer {
         title = 'PR Details',
         define_preview = function(self, entry)
-          local name = entry.value.author.login
-          if entry.value.author.name ~= '' then
-            name = entry.value.author.name
-          end
-          local formatted = {
-            '# ' .. entry.value.number .. ': ' .. entry.value.title,
-            '',
-            '[' .. name .. '](https://github.com/' .. entry.value.author.login .. ')',
-            '',
-          }
-          for _, line in ipairs(vim.split(entry.value.body, '\r\n')) do
-            local sanitized = line:gsub('[\n\r]', '')
-            table.insert(formatted, sanitized)
-          end
-          table.insert(formatted, '')
-          table.insert(formatted, '## Changed files')
-          table.insert(formatted, '')
-          for _, file in ipairs(entry.value.files) do
-            table.insert(formatted, '* ' .. file.path)
-          end
-          vim.api.nvim_buf_set_lines(self.state.bufnr, 0, 0, true, formatted)
-          utils.highlighter(self.state.bufnr, 'markdown')
+          return preview_definer.define(self.state.bufnr, entry)
         end,
       },
 

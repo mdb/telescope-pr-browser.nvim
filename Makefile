@@ -3,15 +3,15 @@ test: lua/plenary.nvim lua/telescope.nvim
 	@nvim \
 		--headless \
 		--noplugin \
-		-u scripts/minimal_init.vim \
-		-c "PlenaryBustedDirectory lua/tests { minimal_init = './scripts/minimal_init.vim' }"
+		-u tests/minimal_init.vim \
+		-c "PlenaryBustedDirectory tests { minimal_init = 'tests/minimal_init.vim' }"
 .PHONY: test
 
 static-analysis: luacheck
 .PHONY: static-analysis
 
 luacheck:
-	luacheck lua scripts
+	luacheck lua tests
 
 lua/plenary.nvim:
 	git clone \
@@ -22,3 +22,7 @@ lua/telescope.nvim:
 	git clone \
 		--filter=blob:none \
 		https://github.com/nvim-telescope/telescope.nvim $@
+
+demo:
+	vhs < demo.tape
+.PHONY: demo

@@ -1,5 +1,3 @@
-local mock = require 'luassert.mock'
-
 describe('telescope-pr-browser', function()
   local tprb = require 'telescope_pr_browser'
 

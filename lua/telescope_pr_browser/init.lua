@@ -11,6 +11,7 @@ local log = require('plenary.log').new {
   level = 'info',
 }
 local prb_utils = require 'telescope_pr_browser.utils'
+local entry_maker = require 'telescope_pr_browser.entry_maker'
 
 ---@class TPRBModule
 ---@field config TPRBConfig
@@ -41,20 +42,7 @@ M.list_prs = function(opts)
         end,
 
         entry_maker = function(entry)
-          log.info('Got entry', entry)
-          local process = vim.json.decode(entry)
-          log.info('Got entry', process)
-          if process then
-            local mergeable = '  '
-            if process.mergeable == 'MERGEABLE' then
-              mergeable = '✔ '
-            end
-            return {
-              value = process,
-              display = mergeable .. process.title,
-              ordinal = process.number .. ' ' .. process.title,
-            }
-          end
+          return entry_maker.make(entry, log)
         end,
       },
 

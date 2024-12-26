@@ -4,6 +4,7 @@ local actions = require 'telescope.actions'
 local action_state = require 'telescope.actions.state'
 local finders = require 'telescope.finders'
 local previewers = require 'telescope.previewers'
+local utils = require 'telescope.utils'
 local plenary = require 'plenary'
 local log = require('plenary.log').new {
   plugin = 'telescope_pr_browser',
@@ -25,7 +26,7 @@ local M = {}
 M._make_gh_command = function(args)
   local job_opts = {
     command = 'gh',
-    args = vim.tbl_flatten { args, '--json', 'number,title,url,body,author,mergeable,files', '--jq', '.[]' },
+    args = utils.flatten { args, '--json', 'number,title,url,body,author,mergeable,files', '--jq', '.[]' },
   }
   log.info('Running job', job_opts)
   local job = plenary.job:new(job_opts):sync()

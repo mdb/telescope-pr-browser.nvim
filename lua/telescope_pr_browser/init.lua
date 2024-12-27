@@ -41,21 +41,15 @@ M.list_prs = function(opts)
         fn = function()
           return M._make_gh_command { 'pr', 'list' }
         end,
-
-        entry_maker = function(entry)
-          return entry_maker.make(entry, log)
-        end,
+        entry_maker = entry_maker.make,
       },
-
       sorter = conf.generic_sorter(opts),
-
       previewer = previewers.new_buffer_previewer {
         title = 'PR Details',
         define_preview = function(self, entry)
           return preview_definer.define(self.state.bufnr, entry)
         end,
       },
-
       attach_mappings = function(prompt_bufnr)
         actions.select_default:replace(function()
           local selection = action_state.get_selected_entry()

@@ -1,9 +1,8 @@
 local M = {}
 
 -- Make entry in Telescope previewer.
-function M.make(entry, log)
+function M.make(entry)
   local pr = vim.json.decode(entry)
-  log.info('Got entry', pr)
   local mergeable = '  '
   if pr.mergeable == 'MERGEABLE' then
     mergeable = '✔ '
